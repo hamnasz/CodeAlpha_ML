@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import pickle
 import json
 from datetime import datetime
+from utils.database_manager import DatabaseManager
 
 st.set_page_config(page_title="Credit Scoring", page_icon="🎯", layout="wide")
 
@@ -368,6 +369,24 @@ def single_applicant_scoring(model, model_name, threshold):
             if 'prediction_history' not in st.session_state:
                 st.session_state.prediction_history = []
             st.session_state.prediction_history.append(prediction_log)
+            
+            # Save to database if available
+            try:
+                db_manager = DatabaseManager()
+                if db_manager.test_connection():
+                    # Determine risk category
+                    risk_category = "High Risk" if probability >= threshold else "Low Risk"
+                    
+                    db_manager.log_prediction(
+                        model_id=1,  # Default model ID
+                        input_features=applicant_data,
+                        prediction=prediction,
+                        probability=probability,
+                        risk_category=risk_category
+                    )
+            except Exception as db_e:
+                # Don't fail the main prediction if database logging fails
+                pass
             
         except Exception as e:
             st.error(f"❌ Error making prediction: {str(e)}")

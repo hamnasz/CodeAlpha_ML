@@ -18,15 +18,17 @@ This is a production-ready Credit Scoring Model Platform built with Streamlit th
 - **ML Framework**: Scikit-learn for model training and evaluation
 - **Feature Engineering**: Custom utility classes for automated feature creation
 - **Model Training**: Support for multiple algorithms (Logistic Regression, Decision Trees, Random Forest, Gradient Boosting, SVM)
+- **Database**: PostgreSQL for persistent storage of datasets, models, and predictions
 
 ### Pipeline Structure
-The application follows a 6-stage ML pipeline:
+The application follows a 7-stage ML pipeline:
 1. Data Upload & Initial Analysis
 2. Data Preprocessing
 3. Feature Engineering
 4. Model Training & Hyperparameter Tuning
 5. Model Evaluation & Interpretability
 6. Credit Scoring & Predictions
+7. Database Management & Storage
 
 ## Key Components
 
@@ -69,6 +71,15 @@ The application follows a 6-stage ML pipeline:
   - Equalized odds evaluation
   - Treatment equality assessment
   - Protected attribute bias detection
+
+### Database Management (`utils/database_manager.py`)
+- **Purpose**: Provides persistent storage for the credit scoring platform
+- **Key Features**:
+  - Dataset storage and retrieval with metadata
+  - Model persistence with performance metrics
+  - Prediction logging for audit trails
+  - Data cleanup and maintenance operations
+  - PostgreSQL integration with SQLAlchemy ORM
 
 ## Data Flow
 
