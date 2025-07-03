@@ -5,8 +5,9 @@ import seaborn as sns
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score, roc_auc_score,
     roc_curve, precision_recall_curve, confusion_matrix, classification_report,
-    calibration_curve, brier_score_loss
+    brier_score_loss
 )
+from sklearn.calibration import calibration_curve
 from sklearn.inspection import permutation_importance
 import warnings
 warnings.filterwarnings('ignore')

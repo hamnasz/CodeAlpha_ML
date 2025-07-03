@@ -4,9 +4,13 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.metrics import (roc_curve, auc, precision_recall_curve, 
-                           classification_report, confusion_matrix,
-                           calibration_curve)
-import shap
+                           classification_report, confusion_matrix)
+from sklearn.calibration import calibration_curve
+try:
+    import shap
+    SHAP_AVAILABLE = True
+except ImportError:
+    SHAP_AVAILABLE = False
 from utils.model_evaluator import ModelEvaluator
 
 st.set_page_config(page_title="Model Evaluation", page_icon="📊", layout="wide")
@@ -263,20 +267,21 @@ def main():
                 st.write(f"• Top 5 features account for {total_importance:.1%} of total importance")
         
         # SHAP Analysis (if possible)
-        try:
-            st.markdown("### 🎯 SHAP (SHapley Additive exPlanations) Analysis")
-            
-            with st.spinner("Computing SHAP values... This may take a moment."):
-                # Sample data for SHAP to avoid long computation times
-                X_sample = X_test.sample(min(100, len(X_test)), random_state=42)
+        if SHAP_AVAILABLE:
+            try:
+                st.markdown("### 🎯 SHAP (SHapley Additive exPlanations) Analysis")
                 
-                # Create SHAP explainer based on model type
-                if hasattr(model, 'tree_'):
-                    explainer = shap.TreeExplainer(model)
-                elif hasattr(model, 'coef_'):
-                    explainer = shap.LinearExplainer(model, X_sample)
-                else:
-                    explainer = shap.KernelExplainer(model.predict_proba, X_sample)
+                with st.spinner("Computing SHAP values... This may take a moment."):
+                    # Sample data for SHAP to avoid long computation times
+                    X_sample = X_test.sample(min(100, len(X_test)), random_state=42)
+                    
+                    # Create SHAP explainer based on model type
+                    if hasattr(model, 'tree_'):
+                        explainer = shap.TreeExplainer(model)
+                    elif hasattr(model, 'coef_'):
+                        explainer = shap.LinearExplainer(model, X_sample)
+                    else:
+                        explainer = shap.KernelExplainer(model.predict_proba, X_sample)
                 
                 shap_values = explainer.shap_values(X_sample)
                 
@@ -321,9 +326,12 @@ def main():
                         direction = "increases" if contribution > 0 else "decreases"
                         st.write(f"• {feature}: {direction} probability by {abs(contribution):.3f}")
         
-        except Exception as e:
-            st.warning(f"SHAP analysis not available: {str(e)}")
-            st.info("SHAP analysis requires additional setup and may not work with all model types.")
+            except Exception as e:
+                st.warning(f"SHAP analysis not available: {str(e)}")
+                st.info("SHAP analysis requires additional setup and may not work with all model types.")
+        else:
+            st.markdown("### 🎯 SHAP Analysis")
+            st.info("SHAP library is not available. Install SHAP for advanced model interpretability features.")
         
         # Decision Rules (for tree-based models)
         if hasattr(model, 'tree_'):
