@@ -6,6 +6,40 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Data Upload", page_icon="📊", layout="wide")
 
+def create_sample_dataset():
+    """Create a sample credit dataset for testing purposes"""
+    np.random.seed(42)
+    n_samples = 1000
+    
+    # Create realistic credit data
+    data = {
+        'age': np.random.randint(18, 80, n_samples),
+        'income': np.random.normal(50000, 20000, n_samples).clip(min=15000),
+        'employment_length': np.random.randint(0, 40, n_samples),
+        'loan_amount': np.random.normal(25000, 15000, n_samples).clip(min=1000),
+        'credit_score': np.random.randint(300, 850, n_samples),
+        'debt_to_income': np.random.uniform(0.1, 0.8, n_samples),
+        'payment_history': np.random.choice(['excellent', 'good', 'fair', 'poor'], n_samples, p=[0.3, 0.4, 0.2, 0.1]),
+        'num_credit_accounts': np.random.randint(1, 15, n_samples),
+        'home_ownership': np.random.choice(['own', 'rent', 'mortgage'], n_samples, p=[0.3, 0.4, 0.3]),
+        'education': np.random.choice(['high_school', 'bachelor', 'master', 'phd'], n_samples, p=[0.4, 0.35, 0.2, 0.05]),
+        'marital_status': np.random.choice(['single', 'married', 'divorced'], n_samples, p=[0.4, 0.5, 0.1]),
+    }
+    
+    # Create target variable based on realistic criteria
+    risk_score = (
+        (data['credit_score'] / 850) * 0.4 +
+        (1 - data['debt_to_income']) * 0.3 +
+        (data['income'] / 100000) * 0.2 +
+        (data['employment_length'] / 40) * 0.1
+    )
+    
+    # Add some noise and convert to binary
+    risk_score += np.random.normal(0, 0.1, n_samples)
+    data['default_risk'] = (risk_score < 0.5).astype(int)
+    
+    return pd.DataFrame(data)
+
 def main():
     st.title("📊 Data Upload & Initial Analysis")
     
@@ -13,19 +47,51 @@ def main():
     Upload your credit dataset to begin the modeling process. The system accepts CSV files with credit-related features.
     """)
     
+    # Add sample data option
+    st.info("💡 **Tip**: If you're having upload issues, you can create a sample dataset to test the platform.")
+    
+    col1, col2 = st.columns([3, 1])
+    
+    with col2:
+        if st.button("🎯 Create Sample Dataset"):
+            sample_data = create_sample_dataset()
+            st.session_state.data = sample_data
+            st.success("✅ Sample dataset created successfully!")
+            st.rerun()
+    
+    with col1:
+        st.markdown("**Upload your own data:**")
+    
     # File upload
     uploaded_file = st.file_uploader(
         "Choose a CSV file",
         type="csv",
-        help="Upload a CSV file containing credit data with features like income, debts, payment history, etc."
+        help="Upload a CSV file containing credit data with features like income, debts, payment history, etc.",
+        accept_multiple_files=False
     )
     
     if uploaded_file is not None:
         try:
-            # Load data
-            data = pd.read_csv(uploaded_file)
-            st.session_state.data = data
+            # Check file size
+            file_size = uploaded_file.size
+            if file_size > 200 * 1024 * 1024:  # 200MB limit
+                st.error("File size exceeds 200MB limit. Please upload a smaller file.")
+                return
             
+            # Load data with error handling
+            try:
+                data = pd.read_csv(uploaded_file)
+            except pd.errors.EmptyDataError:
+                st.error("The uploaded file is empty. Please upload a valid CSV file.")
+                return
+            except pd.errors.ParserError as e:
+                st.error(f"Error parsing CSV file: {str(e)}")
+                return
+            except Exception as e:
+                st.error(f"Error reading file: {str(e)}")
+                return
+            
+            st.session_state.data = data
             st.success("✅ Data uploaded successfully!")
             
             # Basic information
