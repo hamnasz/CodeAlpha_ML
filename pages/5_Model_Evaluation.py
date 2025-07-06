@@ -18,6 +18,14 @@ st.set_page_config(page_title="Model Evaluation", page_icon="📊", layout="wide
 def main():
     st.title("📊 Model Evaluation & Interpretability")
     
+    # Initialize session state if needed
+    if 'trained_models' not in st.session_state:
+        st.session_state.trained_models = {}
+    if 'model_results' not in st.session_state:
+        st.session_state.model_results = {}
+    if 'engineered_data' not in st.session_state:
+        st.session_state.engineered_data = None
+    
     if not st.session_state.trained_models:
         st.error("❌ No trained models found. Please complete model training first.")
         st.info("👈 Go to Model Training page to train your models.")

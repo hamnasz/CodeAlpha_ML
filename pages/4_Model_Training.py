@@ -17,6 +17,14 @@ st.set_page_config(page_title="Model Training", page_icon="🤖", layout="wide")
 def main():
     st.title("🤖 Model Training & Hyperparameter Tuning")
     
+    # Initialize session state if needed
+    if 'engineered_data' not in st.session_state:
+        st.session_state.engineered_data = None
+    if 'trained_models' not in st.session_state:
+        st.session_state.trained_models = {}
+    if 'model_results' not in st.session_state:
+        st.session_state.model_results = {}
+    
     if st.session_state.engineered_data is None:
         st.error("❌ No engineered data found. Please complete feature engineering first.")
         st.info("👈 Go to Feature Engineering page to prepare your features.")

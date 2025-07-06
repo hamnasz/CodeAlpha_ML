@@ -12,6 +12,12 @@ st.set_page_config(page_title="Feature Engineering", page_icon="⚙️", layout=
 def main():
     st.title("⚙️ Feature Engineering")
     
+    # Initialize session state if needed
+    if 'processed_data' not in st.session_state:
+        st.session_state.processed_data = None
+    if 'engineered_data' not in st.session_state:
+        st.session_state.engineered_data = None
+    
     if st.session_state.processed_data is None:
         st.error("❌ No processed data found. Please complete data preprocessing first.")
         st.info("👈 Go to Data Preprocessing page to clean your data.")

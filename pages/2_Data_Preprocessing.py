@@ -10,6 +10,12 @@ st.set_page_config(page_title="Data Preprocessing", page_icon="🧹", layout="wi
 def main():
     st.title("🧹 Data Preprocessing")
     
+    # Initialize session state if needed
+    if 'data' not in st.session_state:
+        st.session_state.data = None
+    if 'processed_data' not in st.session_state:
+        st.session_state.processed_data = None
+    
     if st.session_state.data is None:
         st.error("❌ No data found. Please upload data first.")
         st.info("👈 Go to Data Upload page to load your dataset.")
@@ -140,8 +146,8 @@ def main():
             )
         
         with col3:
-            missing_before = data.isnull().sum().sum()
-            missing_after = processed_data.isnull().sum().sum()
+            missing_before = int(data.isnull().sum().sum())
+            missing_after = int(processed_data.isnull().sum().sum())
             st.metric(
                 "Missing Values",
                 missing_after,
