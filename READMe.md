@@ -105,7 +105,7 @@ The application follows a 6-stage ML pipeline:
 ## Deployment Strategy
 
 ### Current Setup
-- **Platform**: Designed for Replit deployment
+- **Platform**: Designed for Github Codespace
 - **Architecture**: Single-container Streamlit application
 - **State Management**: Session-based (non-persistent)
 - **File Handling**: In-memory processing of uploaded CSV files
