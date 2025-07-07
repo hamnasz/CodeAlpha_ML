@@ -40,7 +40,7 @@ A production-ready Credit Scoring Model Platform built with Streamlit that provi
 2. **Install Python dependencies**:
    ```bash
    # Navigate to project directory
-   cd credit-scoring-platform
+   cd MachineLearningProject
    
    # Install dependencies using pip
    pip install streamlit pandas numpy plotly scikit-learn scipy seaborn matplotlib
@@ -109,7 +109,7 @@ streamlit run app.py --server.port 5000
 ## 📁 Project Structure
 
 ```
-credit-scoring-platform/
+MachineLearningProject/
 ├── app.py                      # Main Streamlit application
 ├── pages/                      # Streamlit pages
 │   ├── 1_Data_Upload.py       # Data upload and initial analysis
@@ -173,8 +173,8 @@ Your CSV dataset should include features such as:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/credit-scoring-platform.git
-   cd credit-scoring-platform
+   git clone https://github.com/hamnasz/MachineLearningProject.git
+   cd MachineLearningProject
    ```
 
 2. **Install dependencies**:
