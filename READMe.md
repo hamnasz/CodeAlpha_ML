@@ -3,7 +3,7 @@
 
 ![Python](https://img.shields.io/badge/python-v3.11+-blue.svg)
 ![Streamlit](https://img.shields.io/badge/streamlit-1.46.1+-red.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 A production-ready Credit Scoring Model Platform built with Streamlit that provides a comprehensive solution for building, evaluating, and deploying credit risk assessment systems. The platform implements a complete machine learning pipeline from data upload through model deployment, specifically designed for predicting individual creditworthiness using historical financial data.
 
